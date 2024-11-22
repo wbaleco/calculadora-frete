@@ -1,18 +1,10 @@
-from fastapi import FastAPI
 import flet as ft
 from flet import Page
 from datetime import datetime
 from fpdf import FPDF
 import json
-import platform
-import subprocess
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
-from statistics import mean
-import time
-import os
-
-app = FastAPI()
 
 async def main(page: Page):
     page.title = "Calculadora de Frete"
@@ -20,9 +12,6 @@ async def main(page: Page):
     page.padding = 20
     page.scroll = "auto"
     
-    # Inicializar o geocodificador
-    geolocator = Nominatim(user_agent="calculadora_frete")
-
     # Campos de entrada
     txt_origem = ft.TextField(
         label="Cidade de Origem",
@@ -77,10 +66,5 @@ async def main(page: Page):
         )
     )
 
-@app.get("/")
-async def read_root():
-    return await ft.app(target=main, view=ft.WEB_BROWSER)
-
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("app:app", host="0.0.0.0", port=8080, reload=True)
+    ft.app(target=main, view=ft.WEB_BROWSER, port=8081)
