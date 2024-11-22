@@ -1,5 +1,5 @@
-from flet import *
-import flet as ft
+import flet
+from flet import Page, TextField, Dropdown, Column, Row, Text, FontWeight, MainAxisAlignment, Divider
 
 def main(page: Page):
     page.title = "Calculadora de Frete"
@@ -27,14 +27,14 @@ def main(page: Page):
         label="Número de Eixos",
         width=200,
         options=[
-            dropdown.Option("2"),
-            dropdown.Option("3"),
-            dropdown.Option("4"),
-            dropdown.Option("5"),
-            dropdown.Option("6"),
-            dropdown.Option("7"),
-            dropdown.Option("8"),
-            dropdown.Option("9")
+            flet.dropdown.Option("2"),
+            flet.dropdown.Option("3"),
+            flet.dropdown.Option("4"),
+            flet.dropdown.Option("5"),
+            flet.dropdown.Option("6"),
+            flet.dropdown.Option("7"),
+            flet.dropdown.Option("8"),
+            flet.dropdown.Option("9")
         ]
     )
     
@@ -59,4 +59,4 @@ def main(page: Page):
     )
 
 if __name__ == "__main__":
-    ft.app(target=main)
+    flet.app(target=main)
