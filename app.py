@@ -1,25 +1,86 @@
 from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
 import flet as ft
-import uvicorn
+from flet import Page
+from datetime import datetime
+from fpdf import FPDF
+import json
+import platform
+import subprocess
+from geopy.geocoders import Nominatim
+from geopy.distance import geodesic
+from statistics import mean
+import time
+import os
 
 app = FastAPI()
 
-# Configurar arquivos estáticos
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
-def main(page: ft.Page):
+async def main(page: Page):
     page.title = "Calculadora de Frete"
     page.theme_mode = ft.ThemeMode.LIGHT
     page.padding = 20
     page.scroll = "auto"
     
-    # ... resto do seu código ...
+    # Inicializar o geocodificador
+    geolocator = Nominatim(user_agent="calculadora_frete")
+
+    # Campos de entrada
+    txt_origem = ft.TextField(
+        label="Cidade de Origem",
+        width=200,
+        hint_text="Ex: São Paulo, SP"
+    )
+    
+    txt_destino = ft.TextField(
+        label="Cidade de Destino",
+        width=200,
+        hint_text="Ex: Rio de Janeiro, RJ"
+    )
+    
+    txt_distancia = ft.TextField(
+        label="Distância (km)",
+        width=200,
+        hint_text="Distância será calculada automaticamente",
+        read_only=True
+    )
+    
+    dd_eixos = ft.Dropdown(
+        label="Número de Eixos",
+        width=200,
+        options=[
+            ft.dropdown.Option("2"),
+            ft.dropdown.Option("3"),
+            ft.dropdown.Option("4"),
+            ft.dropdown.Option("5"),
+            ft.dropdown.Option("6"),
+            ft.dropdown.Option("7"),
+            ft.dropdown.Option("8"),
+            ft.dropdown.Option("9")
+        ]
+    )
+    
+    txt_resultado = ft.Text(
+        size=20,
+        weight=ft.FontWeight.BOLD
+    )
+    
+    # Layout
+    await page.add_async(
+        ft.Container(
+            content=ft.Column([
+                ft.Text("Calculadora de Frete", size=30, weight=ft.FontWeight.BOLD),
+                ft.Divider(),
+                ft.Row([txt_origem, txt_destino], alignment=ft.MainAxisAlignment.CENTER),
+                ft.Row([txt_distancia, dd_eixos], alignment=ft.MainAxisAlignment.CENTER),
+                txt_resultado
+            ]),
+            padding=20
+        )
+    )
 
 @app.get("/")
 async def read_root():
-    return ft.app(target=main, view=ft.WEB_BROWSER)
+    return await ft.app(target=main, view=ft.WEB_BROWSER)
 
 if __name__ == "__main__":
-    # Executar com uvicorn
+    import uvicorn
     uvicorn.run("app:app", host="0.0.0.0", port=8080, reload=True)
